@@ -113,11 +113,16 @@
 </head>
 <body class="text-slate-800 antialiased selection:bg-indigo-100 selection:text-indigo-900 relative">
 
-    <!-- Header Global -->
+    <!-- Header Global dengan Ikon Tanda Tangan (Signature) -->
     <header class="bg-white/80 backdrop-blur-md border-b border-slate-200 sticky top-0 z-40 w-full">
         <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-            <div class="flex items-center gap-2">
-                <div class="w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-white font-bold shadow-md">T</div>
+            <div class="flex items-center gap-2.5">
+                <div class="w-9 h-9 bg-primary rounded-xl flex items-center justify-center text-white shadow-md shadow-indigo-200">
+                    <!-- SVG Icon Signature / Tanda Tangan / Pena -->
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path>
+                    </svg>
+                </div>
                 <span class="font-bold text-lg tracking-tight text-slate-900">TTE <span class="font-normal text-slate-500">SpecimenStudio</span></span>
             </div>
             <a href="https://bsre.bssn.go.id" target="_blank" class="text-xs text-slate-400 hover:text-primary transition-colors">Standar BSrE BSSN</a>
@@ -300,7 +305,6 @@
     <script>
         // Logika Navigasi Halaman dengan Auto Scroll ke atas
         function switchView(view) {
-            // Scroll otomatis ke puncak layar dengan animasi smooth
             window.scrollTo({ top: 0, behavior: 'smooth' });
             
             const guide = document.getElementById('view-guide');
@@ -333,7 +337,6 @@
             const inputNama = document.getElementById('input-nama').value;
             const inputPangkat = document.getElementById('input-pangkat').value;
 
-            // Jika kosong, tampilkan placeholder transparan agar kotak tidak menciut
             const valJabatan = inputJabatan.trim() === "" ? "NAMA JABATAN" : inputJabatan;
             const valNama = inputNama.trim() === "" ? "NAMA LENGKAP PEJABAT" : inputNama;
 
@@ -353,7 +356,7 @@
         // Konfigurasi Standar html2canvas
         const canvasOptions = { 
             scale: 4, 
-            backgroundColor: null // Memastikan luar kotak transparan!
+            backgroundColor: null 
         };
 
         // Fitur: Unduh Gambar
