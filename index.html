@@ -65,7 +65,6 @@
         /* CSS UNTUK UI/UX MODERN */
         body { background-color: #f8fafc; }
         
-        /* Background Papan Catur untuk Canvas Preview */
         .bg-checker {
             background-color: #f1f5f9;
             background-image: linear-gradient(45deg, #e2e8f0 25%, transparent 25%, transparent 75%, #e2e8f0 75%, #e2e8f0),
@@ -74,7 +73,6 @@
             background-position: 0 0, 10px 10px;
         }
 
-        /* Animasi Transisi Halaman yang lebih rapi */
         .hidden-view { 
             opacity: 0; 
             transform: translateY(15px); 
@@ -93,13 +91,11 @@
             transition: opacity 0.4s ease, transform 0.4s ease; 
         }
 
-        /* Kustom Scrollbar */
         ::-webkit-scrollbar { width: 8px; height: 8px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
         ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
 
-        /* Toast Notification */
         .toast {
             position: fixed; bottom: 24px; right: 24px; padding: 16px 24px;
             border-radius: 8px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
@@ -113,7 +109,7 @@
 </head>
 <body class="text-slate-800 antialiased selection:bg-indigo-100 selection:text-indigo-900 relative">
 
-    <!-- Header Global dengan Ikon Tanda Tangan (Signature) -->
+    <!-- Header Global -->
     <header class="bg-white/80 backdrop-blur-md border-b border-slate-200 sticky top-0 z-40 w-full">
         <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
             <div class="flex items-center gap-2.5">
@@ -131,13 +127,11 @@
     <!-- WRAPPER UTAMA -->
     <main class="w-full relative pt-10 pb-16">
 
-        <!-- ==========================================
-             VIEW 1: HALAMAN PANDUAN (ONBOARDING)
-             ========================================== -->
+        <!-- VIEW 1: HALAMAN PANDUAN -->
         <div id="view-guide" class="active-view max-w-5xl mx-auto px-6">
             
             <div class="text-center mb-12">
-                <span class="inline-block py-1 px-3 rounded-full bg-indigo-50 text-primary text-xs font-semibold tracking-wider mb-4 border border-indigo-100">VERSION 2.0 PRO</span>
+                <span class="inline-block py-1 px-3 rounded-full bg-indigo-50 text-primary text-xs font-semibold tracking-wider mb-4 border border-indigo-100">VERSION 2.1 PRO</span>
                 <h1 class="text-4xl md:text-5xl font-extrabold text-slate-900 mb-4 tracking-tight">Generator Spesimen TTE</h1>
                 <p class="text-lg text-slate-500 max-w-2xl mx-auto leading-relaxed">Hasilkan representasi visual tanda tangan elektronik sesuai tata naskah dinas dalam hitungan detik. Bersih, presisi, dan siap diunduh.</p>
             </div>
@@ -150,11 +144,7 @@
                     </h2>
                     
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                        <!-- DO'S -->
                         <div class="bg-emerald-50/50 rounded-xl p-6 border border-emerald-100 relative overflow-hidden">
-                            <div class="absolute top-0 right-0 p-4 opacity-10">
-                                <svg class="w-24 h-24 text-emerald-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
-                            </div>
                             <h3 class="text-lg font-bold text-emerald-800 mb-3 relative z-10">Fungsi Utama</h3>
                             <ul class="space-y-3 text-sm text-emerald-700 relative z-10">
                                 <li class="flex items-start gap-2"><svg class="w-5 h-5 text-emerald-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> <span>Menghasilkan gambar spesimen visual (PNG) beresolusi tinggi.</span></li>
@@ -163,11 +153,7 @@
                             </ul>
                         </div>
 
-                        <!-- DON'TS -->
                         <div class="bg-rose-50/50 rounded-xl p-6 border border-rose-100 relative overflow-hidden">
-                            <div class="absolute top-0 right-0 p-4 opacity-10">
-                                <svg class="w-24 h-24 text-rose-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path></svg>
-                            </div>
                             <h3 class="text-lg font-bold text-rose-800 mb-3 relative z-10">Peringatan Keras</h3>
                             <ul class="space-y-3 text-sm text-rose-700 relative z-10">
                                 <li class="flex items-start gap-2"><svg class="w-5 h-5 text-rose-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg> <span>Gambar ini <strong>BUKAN</strong> sertifikat elektronik yang sah secara hukum.</span></li>
@@ -187,9 +173,7 @@
             </div>
         </div>
 
-        <!-- ==========================================
-             VIEW 2: RUANG KERJA (GENERATOR)
-             ========================================== -->
+        <!-- VIEW 2: RUANG KERJA (GENERATOR) -->
         <div id="view-workspace" class="hidden-view max-w-7xl mx-auto px-4 md:px-6">
             
             <button onclick="switchView('guide')" class="group flex items-center gap-2 text-sm text-slate-500 hover:text-primary transition-colors mb-6">
@@ -201,10 +185,8 @@
 
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
                 
-                <!-- KOLOM KIRI: FORM KENDALI -->
+                <!-- KOLOM KIRI: FORM KENDALI (DENGAN INPUT GELAR TERPISAH) -->
                 <div class="lg:col-span-5 flex flex-col gap-6">
-                    
-                    <!-- Card Pengisian -->
                     <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 md:p-8">
                         <div class="flex justify-between items-end mb-6">
                             <div>
@@ -216,16 +198,27 @@
                             </button>
                         </div>
 
-                        <!-- Form Utama -->
                         <div class="space-y-5">
                             <div>
                                 <label class="block text-sm font-medium text-slate-700 mb-1.5">Nama Jabatan <span class="text-rose-500">*</span></label>
                                 <input type="text" id="input-jabatan" class="w-full bg-slate-50 border border-slate-200 text-slate-900 text-sm rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary block p-3 transition-all" placeholder="Contoh: SEKRETARIS DAERAH" oninput="updatePreview()" autocomplete="off">
                             </div>
                             
+                            <!-- Grid Gelar Depan & Belakang -->
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-xs font-medium text-slate-600 mb-1">Gelar Depan <span class="text-slate-400">(Opsional)</span></label>
+                                    <input type="text" id="input-gelar-depan" class="w-full bg-slate-50 border border-slate-200 text-slate-900 text-sm rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary block p-2.5 transition-all" placeholder="Contoh: Prof. Dr." oninput="updatePreview()" autocomplete="off">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-medium text-slate-600 mb-1">Gelar Belakang <span class="text-slate-400">(Opsional)</span></label>
+                                    <input type="text" id="input-gelar-belakang" class="w-full bg-slate-50 border border-slate-200 text-slate-900 text-sm rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary block p-2.5 transition-all" placeholder="Contoh: M.Pd., Ph.D." oninput="updatePreview()" autocomplete="off">
+                                </div>
+                            </div>
+
                             <div>
-                                <label class="block text-sm font-medium text-slate-700 mb-1.5">Nama Lengkap & Gelar <span class="text-rose-500">*</span></label>
-                                <input type="text" id="input-nama" class="w-full bg-slate-50 border border-slate-200 text-slate-900 text-sm rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary block p-3 transition-all" placeholder="Contoh: DR. H. AHMAD FULAN, M.Si." oninput="updatePreview()" autocomplete="off">
+                                <label class="block text-sm font-medium text-slate-700 mb-1.5">Nama Utama <span class="text-rose-500">*</span></label>
+                                <input type="text" id="input-nama" class="w-full bg-slate-50 border border-slate-200 text-slate-900 text-sm rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary block p-3 transition-all" placeholder="Contoh: AHMAD FULAN" oninput="updatePreview()" autocomplete="off">
                             </div>
 
                             <div>
@@ -238,7 +231,6 @@
 
                 <!-- KOLOM KANAN: KANVAS PREVIEW -->
                 <div class="lg:col-span-7 flex flex-col gap-6">
-                    
                     <div class="bg-white rounded-2xl shadow-sm border border-slate-200 flex flex-col h-full overflow-hidden">
                         
                         <div class="border-b border-slate-100 p-4 px-6 flex justify-between items-center bg-slate-50/50">
@@ -252,7 +244,7 @@
                         <!-- Area Checkerboard -->
                         <div class="bg-checker flex-1 min-h-[300px] flex items-center justify-center p-6 overflow-x-auto relative">
                             
-                            <!-- KOTAK SPESIMEN (STRUKTUR HTML ASLI TIDAK DIUBAH) -->
+                            <!-- KOTAK SPESIMEN -->
                             <div id="spesimen-preview" class="spesimen-box shadow-md hover:shadow-lg transition-shadow duration-300">
                                 <div class="logo-container">
                                     <img src="logo.png" alt="Logo BSrE" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjY2JkNWUxIiBzdHJva2Utd2lkdGg9IjEiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iMTAiPjwvY2lyY2xlPjxsaW5lIHgxPSIxMiIgeTE9IjgiIHgyPSIxMiIgeTI9IjEyIj48L2xpbmU+PGxpbmUgeDE9IjEyIiB5MT0iMTYiIHgyPSIxMi4wMSIgeTI9IjE2Ij48L2xpbmU+PC9zdmc+'" title="Pastikan file logo.png ada di folder yang sama">
@@ -271,19 +263,15 @@
                         <!-- Aksi Bawah -->
                         <div class="p-6 border-t border-slate-100 bg-white">
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                
-                                <!-- Tombol Salin -->
                                 <button onclick="copyImage()" class="flex items-center justify-center gap-2 w-full py-3 px-4 bg-white border-2 border-slate-200 hover:border-primary hover:bg-indigo-50 text-slate-700 hover:text-primary font-semibold rounded-lg transition-all focus:outline-none focus:ring-4 focus:ring-indigo-100">
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path></svg>
                                     Salin Gambar (Copy)
                                 </button>
                                 
-                                <!-- Tombol Unduh -->
                                 <button onclick="downloadImage()" class="flex items-center justify-center gap-2 w-full py-3 px-4 bg-primary hover:bg-primaryHover text-white font-semibold rounded-lg shadow-md shadow-indigo-200 transition-all transform hover:-translate-y-0.5 focus:outline-none focus:ring-4 focus:ring-indigo-200">
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
                                     Unduh High-Res (PNG)
                                 </button>
-
                             </div>
                             <p class="text-center text-xs text-slate-400 mt-4">Transparansi otomatis terjaga (Tidak ada background putih di luar garis).</p>
                         </div>
@@ -298,11 +286,9 @@
         </div>
     </main>
 
-    <!-- Kontainer Toast -->
     <div id="toast" class="toast"></div>
 
     <script>
-        // Logika Navigasi Halaman dengan Auto Scroll ke atas
         function switchView(view) {
             window.scrollTo({ top: 0, behavior: 'smooth' });
             
@@ -322,25 +308,38 @@
             }
         }
 
-        // Fitur: Bersihkan Form
         function resetForm() {
             document.getElementById('input-jabatan').value = '';
+            document.getElementById('input-gelar-depan').value = '';
+            document.getElementById('input-gelar-belakang').value = '';
             document.getElementById('input-nama').value = '';
             document.getElementById('input-pangkat').value = '';
             updatePreview();
         }
 
-        // Logika Update Preview Inti
+        // Logika Penggabungan Gelar Otomatis
         function updatePreview() {
             const inputJabatan = document.getElementById('input-jabatan').value;
+            const gelarDepan = document.getElementById('input-gelar-depan').value.trim();
+            const gelarBelakang = document.getElementById('input-gelar-belakang').value.trim();
             const inputNama = document.getElementById('input-nama').value;
             const inputPangkat = document.getElementById('input-pangkat').value;
 
             const valJabatan = inputJabatan.trim() === "" ? "NAMA JABATAN" : inputJabatan;
-            const valNama = inputNama.trim() === "" ? "NAMA LENGKAP PEJABAT" : inputNama;
+            const namaUtama = inputNama.trim() === "" ? "NAMA LENGKAP" : inputNama;
+
+            // Merakit Nama Lengkap dengan Gelar sesuai kaidah penulisan
+            let gabunganNama = "";
+            if (gelarDepan !== "") {
+                gabunganNama += gelarDepan + " ";
+            }
+            gabunganNama += namaUtama;
+            if (gelarBelakang !== "") {
+                gabunganNama += ", " + gelarBelakang;
+            }
 
             document.getElementById('preview-jabatan').innerText = valJabatan + (inputJabatan.trim() === "" ? "" : ",");
-            document.getElementById('preview-nama').innerText = valNama;
+            document.getElementById('preview-nama').innerText = gabunganNama;
             
             const pangkatEl = document.getElementById('preview-pangkat');
             if (inputPangkat.trim() === "") {
@@ -352,13 +351,11 @@
             }
         }
 
-        // Konfigurasi Standar html2canvas
         const canvasOptions = { 
             scale: 4, 
             backgroundColor: null 
         };
 
-        // Fitur: Unduh Gambar
         function downloadImage() {
             let valJabatan = document.getElementById('input-jabatan').value.trim() || "jabatan";
             let valNama = document.getElementById('input-nama').value.trim() || "nama";
@@ -377,7 +374,6 @@
             });
         }
 
-        // Fitur: Salin Gambar Langsung (Clipboard)
         function copyImage() {
             const element = document.getElementById('spesimen-preview');
             
@@ -398,7 +394,6 @@
             });
         }
 
-        // Fitur: Toast Notification System
         let toastTimeout;
         function showToast(message, type) {
             const toast = document.getElementById('toast');
@@ -411,7 +406,6 @@
             }, 4000);
         }
 
-        // Inisialisasi awal UI
         updatePreview();
     </script>
 </body>
