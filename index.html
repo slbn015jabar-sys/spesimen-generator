@@ -8,7 +8,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     
     <style>
-        /* === CSS UNTUK SPESIMEN (TIDAK DIUBAH, SUDAH PRESISI) === */
         .spesimen-box {
             font-family: Arial, Helvetica, sans-serif;
             font-size: 11px; 
@@ -57,7 +56,6 @@
             text-transform: uppercase;
         }
 
-        /* Animasi transisi halus saat pindah halaman */
         .fade-in {
             animation: fadeIn 0.4s ease-in-out;
         }
@@ -69,9 +67,7 @@
 </head>
 <body class="bg-gray-100 min-h-screen flex items-center justify-center p-4 font-sans">
 
-    <!-- ==========================================
-         HALAMAN 1: PANDUAN (Tampil Pertama Kali)
-         ========================================== -->
+    <!-- HALAMAN PANDUAN -->
     <div id="guide-section" class="bg-white p-6 md:p-10 rounded-xl shadow-lg w-full max-w-4xl fade-in">
         <div class="text-center mb-8">
             <h1 class="text-3xl font-extrabold text-gray-800 mb-2">Panduan Penggunaan</h1>
@@ -79,16 +75,13 @@
         </div>
 
         <div class="space-y-6 text-gray-700 leading-relaxed">
-            <!-- Intro & Kegunaan -->
             <section class="bg-blue-50 p-5 rounded-lg border border-blue-100">
                 <h2 class="text-xl font-bold text-blue-800 mb-2">Maksud, Tujuan & Kegunaan</h2>
                 <p>Aplikasi ini dibuat untuk mempermudah aparatur dalam mencetak <strong>representasi visual (spesimen kotak)</strong> Tanda Tangan Elektronik secara instan. Spesimen ini di-generate secara otomatis mengikuti standar tata naskah dinas (penggunaan font Arial ukuran 8pt, spasi proporsional, dan format yang rapi).</p>
                 <p class="mt-2"><strong>Kegunaan Utama:</strong> Digunakan untuk disematkan pada draf Naskah Dinas (format Word atau PDF) sebagai penanda visual *sebelum* dokumen tersebut ditandatangani secara kriptografi menggunakan sertifikat elektronik dari BSrE BSSN.</p>
             </section>
 
-            <!-- Do's and Don'ts -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <!-- Yang Diperbolehkan -->
                 <section class="bg-green-50 p-5 rounded-lg border border-green-100">
                     <h2 class="text-lg font-bold text-green-800 mb-3 flex items-center">
                         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
@@ -101,7 +94,6 @@
                     </ul>
                 </section>
 
-                <!-- Yang Tidak Diperbolehkan -->
                 <section class="bg-red-50 p-5 rounded-lg border border-red-100">
                     <h2 class="text-lg font-bold text-red-800 mb-3 flex items-center">
                         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
@@ -115,7 +107,6 @@
                 </section>
             </div>
 
-            <!-- Disclaimer -->
             <div class="text-xs text-gray-400 text-center mt-4">
                 *Dengan menekan tombol di bawah, Anda memahami bahwa keabsahan hukum TTE terletak pada sertifikat digital BSrE, bukan pada gambar visual ini semata.
             </div>
@@ -130,39 +121,35 @@
     </div>
 
 
-    <!-- ==========================================
-         HALAMAN 2: GENERATOR (Disembunyikan awalnya)
-         ========================================== -->
+    <!-- HALAMAN GENERATOR -->
     <div id="generator-section" class="hidden bg-white p-6 md:p-8 rounded-xl shadow-lg w-full max-w-4xl fade-in">
         
-        <!-- Tombol Kembali -->
         <button onclick="showGuide()" class="text-blue-600 hover:text-blue-800 text-sm font-semibold flex items-center mb-6 transition-colors">
             <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
             Kembali ke Panduan
         </button>
 
         <div class="flex flex-col md:flex-row gap-8">
-            <!-- Form Input -->
+            <!-- Form Input (Telah Dikosongkan) -->
             <div class="w-full md:w-1/2">
                 <h2 class="text-2xl font-bold mb-5 text-gray-800">Form Spesimen TTE</h2>
                 
                 <div class="mb-4">
                     <label class="block text-sm font-medium text-gray-700">Jabatan</label>
-                    <input type="text" id="input-jabatan" class="mt-1 p-2 w-full border rounded outline-blue-500" oninput="updatePreview()" value="OPERATOR LAYANAN OPERASIONAL">
+                    <input type="text" id="input-jabatan" class="mt-1 p-2 w-full border rounded outline-blue-500" oninput="updatePreview()" placeholder="Contoh: KEPALA DINAS PENDIDIKAN">
                 </div>
                 
                 <div class="mb-4">
                     <label class="block text-sm font-medium text-gray-700">Nama Lengkap</label>
-                    <input type="text" id="input-nama" class="mt-1 p-2 w-full border rounded outline-blue-500" oninput="updatePreview()" value="HANJAR CATUR SAKSONO">
+                    <input type="text" id="input-nama" class="mt-1 p-2 w-full border rounded outline-blue-500" oninput="updatePreview()" placeholder="Contoh: DR. H. AHMAD FULAN, M.Si.">
                 </div>
 
                 <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-700">Pangkat (Hapus jika tidak perlu)</label>
-                    <input type="text" id="input-pangkat" class="mt-1 p-2 w-full border rounded outline-blue-500" oninput="updatePreview()" value="">
+                    <label class="block text-sm font-medium text-gray-700">Pangkat (Opsional)</label>
+                    <input type="text" id="input-pangkat" class="mt-1 p-2 w-full border rounded outline-blue-500" oninput="updatePreview()" placeholder="Contoh: Pembina Utama Muda">
                 </div>
             </div>
 
-            <!-- Preview -->
             <div class="w-full md:w-1/2 flex flex-col items-center justify-center border-t-2 md:border-t-0 md:border-l-2 pt-6 md:pt-0 md:pl-8">
                 <h2 class="text-xl font-bold mb-5 text-gray-800 text-center w-full">Preview Spesimen</h2>
                 
@@ -183,6 +170,74 @@
 
                 <button onclick="downloadImage()" class="mt-4 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded w-full max-w-[365px] transition-colors shadow-md flex items-center justify-center">
                     <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                    Unduh Spesimen (PNG)
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showGenerator() {
+            document.getElementById('guide-section').classList.add('hidden');
+            document.getElementById('generator-section').classList.remove('hidden');
+        }
+
+        function showGuide() {
+            document.getElementById('generator-section').classList.add('hidden');
+            document.getElementById('guide-section').classList.remove('hidden');
+        }
+
+        function updatePreview() {
+            // Ambil nilai dari input, jika kosong gunakan teks dummy
+            const inputJabatan = document.getElementById('input-jabatan').value;
+            const inputNama = document.getElementById('input-nama').value;
+            const inputPangkat = document.getElementById('input-pangkat').value;
+
+            const valJabatan = inputJabatan.trim() === "" ? "NAMA JABATAN" : inputJabatan;
+            const valNama = inputNama.trim() === "" ? "NAMA LENGKAP PEJABAT" : inputNama;
+
+            document.getElementById('preview-jabatan').innerText = valJabatan + ",";
+            document.getElementById('preview-nama').innerText = valNama;
+            
+            const pangkatEl = document.getElementById('preview-pangkat');
+            if (inputPangkat.trim() === "") {
+                pangkatEl.innerHTML = "&nbsp;"; 
+                pangkatEl.style.display = 'block';
+            } else {
+                pangkatEl.innerText = inputPangkat;
+                pangkatEl.style.display = 'block';
+            }
+        }
+
+        function downloadImage() {
+            let valJabatan = document.getElementById('input-jabatan').value.trim();
+            let valNama = document.getElementById('input-nama').value.trim();
+
+            if (!valJabatan) valJabatan = "jabatan";
+            if (!valNama) valNama = "nama";
+
+            valJabatan = valJabatan.replace(/\s+/g, '_');
+            valNama = valNama.replace(/\s+/g, '_');
+
+            const namaFile = `spesimen_${valNama}_${valJabatan}.png`;
+
+            const element = document.getElementById('spesimen-preview');
+            html2canvas(element, { 
+                scale: 4, 
+                backgroundColor: "#ffffff"
+            }).then(canvas => {
+                const link = document.createElement('a');
+                link.download = namaFile;
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+            });
+        }
+
+        updatePreview();
+    </script>
+</body>
+</html>
+</svg>
                     Unduh Spesimen (PNG)
                 </button>
             </div>
