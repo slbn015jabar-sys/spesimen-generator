@@ -8,15 +8,14 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     
     <style>
-        /* Ketentuan: Font Arial, Ukuran ~8pt (11px), Spasi 1 atau 1.5 */
         .spesimen-box {
             font-family: Arial, Helvetica, sans-serif;
             font-size: 11px; 
-            line-height: 1.4; 
-            border: 1.5px solid #000000;
-            border-radius: 12px; 
-            padding: 12px 16px; 
-            width: 410px; 
+            line-height: 1.15; 
+            border: 1px solid #000000; 
+            border-radius: 10px; 
+            padding: 12px 18px 12px 14px; 
+            width: 375px; 
             background-color: #ffffff;
             display: flex;
             align-items: center;
@@ -25,9 +24,9 @@
         }
 
         .logo-container {
-            height: 85px; /* HANYA TINGGI YANG DIATUR */
-            width: 85px; /* Lebar disamakan agar layout rapi */
-            margin-right: 18px; 
+            height: 80px; /* Ukuran dipaskan dengan proporsi teks */
+            width: 80px; 
+            margin-right: 14px; 
             flex-shrink: 0;
             display: flex;
             justify-content: center;
@@ -35,10 +34,9 @@
         }
 
         .logo-container img {
-            height: 100%; /* Gambar akan mengikuti tinggi 85px */
+            height: 100%; 
             width: 100%;
-            /* object-fit: contain memastikan gambar tampil APA ADANYA tanpa ada yang terpotong */
-            object-fit: contain; 
+            object-fit: contain; /* Menampilkan logo bersih Anda 100% utuh */
         }
 
         .text-container {
@@ -50,7 +48,7 @@
         }
 
         .spacer {
-            height: 32px; /* Ruang untuk tanda tangan */
+            height: 34px; 
         }
 
         .uppercase-text {
@@ -62,7 +60,6 @@
 
     <div class="bg-white p-6 md:p-8 rounded-lg shadow-lg w-full max-w-4xl flex flex-col md:flex-row gap-8">
         
-        <!-- Form Input -->
         <div class="w-full md:w-1/2">
             <h2 class="text-2xl font-bold mb-5 text-gray-800">Form Spesimen TTE</h2>
             
@@ -82,20 +79,17 @@
             </div>
         </div>
 
-        <!-- Preview -->
         <div class="w-full md:w-1/2 flex flex-col items-center justify-center border-t-2 md:border-t-0 md:border-l-2 pt-6 md:pt-0 md:pl-8">
             <h2 class="text-xl font-bold mb-5 text-gray-800 text-center w-full">Preview Spesimen</h2>
             
-            <!-- Area yang akan diunduh -->
             <div class="overflow-x-auto w-full flex justify-center pb-4">
                 <div id="spesimen-preview" class="spesimen-box shadow-sm">
                     <div class="logo-container">
-                        <!-- Gambar dipanggil apa adanya -->
                         <img src="logo.png" alt="Logo BSrE">
                     </div>
                     <div class="text-container">
                         <span style="text-transform: none;">Ditandatangani secara elektronik oleh:</span>
-                        <strong id="preview-jabatan" class="uppercase-text font-bold"></strong>
+                        <strong id="preview-jabatan" class="uppercase-text font-bold" style="margin-top: 1px;"></strong>
                         <div class="spacer"></div>
                         <span id="preview-nama" class="uppercase-text"></span>
                         <span id="preview-pangkat"></span>
@@ -103,7 +97,7 @@
                 </div>
             </div>
 
-            <button onclick="downloadImage()" class="mt-4 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded w-full max-w-[410px] transition-colors">
+            <button onclick="downloadImage()" class="mt-4 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded w-full max-w-[375px] transition-colors">
                 Unduh Spesimen (PNG)
             </button>
         </div>
@@ -131,13 +125,24 @@
         }
 
         function downloadImage() {
+            let valJabatan = document.getElementById('input-jabatan').value.trim();
+            let valNama = document.getElementById('input-nama').value.trim();
+
+            if (!valJabatan) valJabatan = "jabatan";
+            if (!valNama) valNama = "nama";
+
+            valJabatan = valJabatan.replace(/\s+/g, '_');
+            valNama = valNama.replace(/\s+/g, '_');
+
+            const namaFile = `spesimen_${valNama}_${valJabatan}.png`;
+
             const element = document.getElementById('spesimen-preview');
             html2canvas(element, { 
                 scale: 4, 
                 backgroundColor: "#ffffff"
             }).then(canvas => {
                 const link = document.createElement('a');
-                link.download = 'spesimen-tte.png';
+                link.download = namaFile;
                 link.href = canvas.toDataURL('image/png');
                 link.click();
             });
