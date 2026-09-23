@@ -11,49 +11,48 @@
         .spesimen-box {
             font-family: Arial, Helvetica, sans-serif;
             font-size: 11px; 
-            line-height: 1.15; 
+            line-height: 1.2; 
             border: 1px solid #000000; 
             border-radius: 8px; 
-            /* PADDING SANGAT DITIPISKAN (Atas 8px, Kanan 12px, Bawah 8px, Kiri 10px) */
-            padding: 8px 12px 8px 10px; 
-            width: 360px; /* Lebar box dipaskan */
+            padding: 12px 16px; /* Padding dikembalikan ke ukuran normal yang rapi */
+            width: 365px; 
             background-color: #ffffff;
             display: flex;
-            align-items: center; /* Membuat logo dan teks sejajar di tengah secara vertikal */
+            align-items: center;
             box-sizing: border-box;
             color: #000000;
         }
 
         .logo-container {
-            height: 65px; 
-            width: 65px; 
-            margin-right: 12px; 
+            height: 75px; 
+            width: 75px; 
+            margin-right: 16px; 
             flex-shrink: 0;
-            overflow: hidden; /* Memotong whitespace yang di-zoom agar tidak bocor */
             display: flex;
             justify-content: center;
             align-items: center;
+            /* OVERFLOW HIDDEN DIHAPUS agar ujung logo sama sekali tidak terpotong */
         }
 
         .logo-container img {
             width: 100%;
             height: 100%;
             object-fit: contain;
-            /* TRIK PENTING: Men-zoom gambar 40% agar whitespace bawaan gambar terbuang, 
-               sehingga logo intinya membesar dan memenuhi wadah */
-            transform: scale(1.4); 
+            /* Memperbesar logo untuk mengisi whitespace transparan bawaan gambar.
+               Karena tidak ada overflow: hidden, logo akan membesar 100% utuh dengan aman */
+            transform: scale(1.25); 
         }
 
         .text-container {
             display: flex;
             flex-direction: column;
-            justify-content: flex-start; /* Menarik teks lebih ke atas */
+            justify-content: center;
             text-align: left;
             width: 100%;
         }
 
         .spacer {
-            height: 38px; /* JARAK TANDA TANGAN DIKEMBALIKAN MENJADI LEGA */
+            height: 28px; /* Jarak tanda tangan yang pas */
         }
 
         .uppercase-text {
@@ -102,7 +101,7 @@
                 </div>
             </div>
 
-            <button onclick="downloadImage()" class="mt-4 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded w-full max-w-[360px] transition-colors">
+            <button onclick="downloadImage()" class="mt-4 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded w-full max-w-[365px] transition-colors">
                 Unduh Spesimen (PNG)
             </button>
         </div>
@@ -120,12 +119,13 @@
             document.getElementById('preview-nama').innerText = valNama;
             
             const pangkatEl = document.getElementById('preview-pangkat');
+            // Logika baru: Jika kosong, berikan spasi kosong (&nbsp;) agar tinggi baris tetap terjaga sebagai jarak!
             if (valPangkat.trim() === "") {
-                pangkatEl.style.display = 'none';
-                pangkatEl.innerText = "";
-            } else {
+                pangkatEl.innerHTML = "&nbsp;"; 
                 pangkatEl.style.display = 'block';
+            } else {
                 pangkatEl.innerText = valPangkat;
+                pangkatEl.style.display = 'block';
             }
         }
 
