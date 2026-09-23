@@ -1,638 +1,419 @@
 <!DOCTYPE html>
-<html lang="id" class="scroll-smooth">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Generator Spesimen TTE Pro | Standar Tata Naskah Dinas</title>
+    <title>TTE Specimen Studio</title>
     
-    <!-- Fonts & Icons -->
+    <!-- Font Inter untuk UI Modern -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <script src="https://unpkg.com/lucide@latest"></script>
     
-    <!-- Libraries -->
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- html2canvas -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    
+
+    <!-- Konfigurasi Tema Tailwind -->
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     fontFamily: { sans: ['Inter', 'sans-serif'] },
-                    colors: {
-                        primary: { 50: '#eff6ff', 100: '#dbeafe', 500: '#3b82f6', 600: '#2563eb', 700: '#1d4ed8', 900: '#1e3a8a' },
-                        slate: { 850: '#1e293b' }
-                    },
-                    animation: {
-                        'fade-in': 'fadeIn 0.5s ease-out',
-                        'slide-up': 'slideUp 0.4s ease-out',
-                    },
-                    keyframes: {
-                        fadeIn: { '0%': { opacity: '0' }, '100%': { opacity: '1' } },
-                        slideUp: { '0%': { opacity: '0', transform: 'translateY(20px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } }
-                    }
+                    colors: { primary: '#4f46e5', primaryHover: '#4338ca' }
                 }
             }
         }
     </script>
-
+    
     <style>
-        /* Custom Styles for Preview Accuracy */
+        /* =========================================================
+           AREA SUCI: CSS SPESIMEN SESUAI STANDAR (TIDAK DIUBAH)
+           ========================================================= */
         .spesimen-box {
             font-family: Arial, Helvetica, sans-serif;
+            font-size: 11px; 
+            line-height: 1.2; 
+            border: 2px solid #000000; 
+            border-radius: 8px; 
+            padding: 12px 16px; 
+            width: 365px; 
+            background-color: #ffffff;
+            display: flex;
+            align-items: center;
             box-sizing: border-box;
-            transition: all 0.3s ease;
+            color: #000000;
         }
+        .logo-container {
+            height: 75px; 
+            width: 75px; 
+            margin-right: 16px; 
+            flex-shrink: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .logo-container img {
+            width: 100%; height: 100%; object-fit: contain; transform: scale(1.25); 
+        }
+        .text-container { display: flex; flex-direction: column; justify-content: center; text-align: left; width: 100%; }
+        .spacer { height: 28px; }
+        .uppercase-text { text-transform: uppercase; }
+        /* ========================================================= */
+
+        /* CSS UNTUK UI/UX MODERN */
+        body { background-color: #f8fafc; }
         
-        .glass-panel {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+        /* Background Papan Catur untuk Canvas Preview */
+        .bg-checker {
+            background-color: #f1f5f9;
+            background-image: linear-gradient(45deg, #e2e8f0 25%, transparent 25%, transparent 75%, #e2e8f0 75%, #e2e8f0),
+                              linear-gradient(45deg, #e2e8f0 25%, transparent 25%, transparent 75%, #e2e8f0 75%, #e2e8f0);
+            background-size: 20px 20px;
+            background-position: 0 0, 10px 10px;
         }
 
-        /* Hide scrollbar for clean UI */
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        /* Animasi Transisi Halaman */
+        .view-transition { transition: opacity 0.4s ease, transform 0.4s ease; }
+        .hidden-view { opacity: 0; transform: translateY(15px); pointer-events: none; position: absolute; width: 100%; visibility: hidden; }
+        .active-view { opacity: 1; transform: translateY(0); position: relative; visibility: visible; }
+
+        /* Kustom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
 
         /* Toast Notification */
-        #toast-container { position: fixed; bottom: 24px; right: 24px; z-index: 50; display: flex; flex-direction: column; gap: 12px; }
         .toast {
-            transform: translateX(100%);
-            transition: transform 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+            position: fixed; bottom: 24px; right: 24px; padding: 16px 24px;
+            border-radius: 8px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+            color: white; font-weight: 500; font-size: 14px; z-index: 50;
+            transform: translateY(100px); opacity: 0; transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
         }
-        .toast.show { transform: translateX(0); }
+        .toast.show { transform: translateY(0); opacity: 1; }
+        .toast.success { background-color: #10b981; }
+        .toast.error { background-color: #ef4444; }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-800 antialiased min-h-screen flex flex-col">
+<body class="text-slate-800 antialiased selection:bg-indigo-100 selection:text-indigo-900 relative min-h-screen overflow-x-hidden">
 
-    <!-- Navbar -->
-    <nav class="bg-white border-b border-slate-200 sticky top-0 z-40">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-16 items-center">
-                <div class="flex items-center gap-3">
-                    <div class="bg-primary-600 text-white p-2 rounded-lg">
-                        <i data-lucide="shield-check" class="w-6 h-6"></i>
-                    </div>
-                    <div>
-                        <h1 class="text-xl font-bold text-slate-900 tracking-tight">TTE Generator Pro</h1>
-                        <p class="text-xs text-slate-500 font-medium">Standar Representasi Visual Tanda Tangan Elektronik</p>
+    <!-- Header Global -->
+    <header class="bg-white/80 backdrop-blur-md border-b border-slate-200 sticky top-0 z-40 w-full">
+        <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-2">
+                <div class="w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-white font-bold shadow-md">T</div>
+                <span class="font-bold text-lg tracking-tight text-slate-900">TTE <span class="font-normal text-slate-500">SpecimenStudio</span></span>
+            </div>
+            <a href="https://bsre.bssn.go.id" target="_blank" class="text-xs text-slate-400 hover:text-primary transition-colors">Standar BSrE BSSN</a>
+        </div>
+    </header>
+
+    <!-- WRAPPER UTAMA -->
+    <main class="w-full relative">
+
+        <!-- ==========================================
+             VIEW 1: HALAMAN PANDUAN (ONBOARDING)
+             ========================================== -->
+        <div id="view-guide" class="active-view max-w-5xl mx-auto px-6 py-12">
+            
+            <div class="text-center mb-12">
+                <span class="inline-block py-1 px-3 rounded-full bg-indigo-50 text-primary text-xs font-semibold tracking-wider mb-4 border border-indigo-100">VERSION 2.0 PRO</span>
+                <h1 class="text-4xl md:text-5xl font-extrabold text-slate-900 mb-4 tracking-tight">Generator Spesimen TTE</h1>
+                <p class="text-lg text-slate-500 max-w-2xl mx-auto leading-relaxed">Hasilkan representasi visual tanda tangan elektronik sesuai tata naskah dinas dalam hitungan detik. Bersih, presisi, dan siap diunduh.</p>
+            </div>
+
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden mb-10">
+                <div class="p-8 md:p-10">
+                    <h2 class="text-2xl font-bold text-slate-800 mb-6 flex items-center gap-3">
+                        <svg class="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        Panduan & Batasan Penggunaan
+                    </h2>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <!-- DO'S -->
+                        <div class="bg-emerald-50/50 rounded-xl p-6 border border-emerald-100 relative overflow-hidden">
+                            <div class="absolute top-0 right-0 p-4 opacity-10">
+                                <svg class="w-24 h-24 text-emerald-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                            </div>
+                            <h3 class="text-lg font-bold text-emerald-800 mb-3 relative z-10">Fungsi Utama</h3>
+                            <ul class="space-y-3 text-sm text-emerald-700 relative z-10">
+                                <li class="flex items-start gap-2"><svg class="w-5 h-5 text-emerald-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> <span>Menghasilkan gambar spesimen visual (PNG) beresolusi tinggi.</span></li>
+                                <li class="flex items-start gap-2"><svg class="w-5 h-5 text-emerald-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> <span>Ditempelkan pada draf Naskah Dinas sebagai penanda posisi TTE.</span></li>
+                                <li class="flex items-start gap-2"><svg class="w-5 h-5 text-emerald-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> <span>Format dan proporsi terkunci mutlak mengikuti standar regulasi.</span></li>
+                            </ul>
+                        </div>
+
+                        <!-- DON'TS -->
+                        <div class="bg-rose-50/50 rounded-xl p-6 border border-rose-100 relative overflow-hidden">
+                            <div class="absolute top-0 right-0 p-4 opacity-10">
+                                <svg class="w-24 h-24 text-rose-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path></svg>
+                            </div>
+                            <h3 class="text-lg font-bold text-rose-800 mb-3 relative z-10">Peringatan Keras</h3>
+                            <ul class="space-y-3 text-sm text-rose-700 relative z-10">
+                                <li class="flex items-start gap-2"><svg class="w-5 h-5 text-rose-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg> <span>Gambar ini <strong>BUKAN</strong> sertifikat elektronik yang sah secara hukum.</span></li>
+                                <li class="flex items-start gap-2"><svg class="w-5 h-5 text-rose-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg> <span>Dilarang keras memalsukan identitas jabatan orang lain.</span></li>
+                                <li class="flex items-start gap-2"><svg class="w-5 h-5 text-rose-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg> <span>Dokumen final tetap <strong>wajib</strong> disahkan melalui sistem BSrE.</span></li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
-                <button onclick="toggleGuide()" class="flex items-center gap-2 text-sm font-medium text-primary-600 hover:text-primary-700 hover:bg-primary-50 px-4 py-2 rounded-lg transition-colors">
-                    <i data-lucide="book-open" class="w-4 h-4"></i>
-                    <span class="hidden sm:inline">Panduan Penggunaan</span>
-                </button>
+                <div class="bg-slate-50 border-t border-slate-100 p-6 flex flex-col md:flex-row items-center justify-between gap-4">
+                    <p class="text-xs text-slate-500 max-w-lg">* Dengan menekan tombol Mulai, Anda menyetujui seluruh ketentuan dan memikul tanggung jawab penuh atas penggunaan gambar yang dihasilkan.</p>
+                    <button onclick="switchView('workspace')" class="w-full md:w-auto bg-primary hover:bg-primaryHover text-white font-medium py-3 px-8 rounded-lg shadow-lg shadow-indigo-200 transition-all transform hover:-translate-y-0.5 flex items-center justify-center gap-2 whitespace-nowrap">
+                        Mulai Ruang Kerja
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                    </button>
+                </div>
             </div>
         </div>
-    </nav>
 
-    <!-- Main Content -->
-    <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        <!-- ==========================================
+             VIEW 2: RUANG KERJA (GENERATOR)
+             ========================================== -->
+        <div id="view-workspace" class="hidden-view max-w-7xl mx-auto px-4 md:px-6 py-8">
             
-            <!-- LEFT COLUMN: Controls -->
-            <div class="lg:col-span-5 space-y-6 animate-slide-up">
-                
-                <!-- Input Card -->
-                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
-                    <div class="flex items-center gap-2 mb-6">
-                        <i data-lucide="edit-3" class="w-5 h-5 text-primary-600"></i>
-                        <h2 class="text-lg font-semibold text-slate-900">Data Spesimen</h2>
-                    </div>
+            <button onclick="switchView('guide')" class="group flex items-center gap-2 text-sm text-slate-500 hover:text-primary transition-colors mb-6">
+                <div class="bg-white p-1.5 rounded-md border border-slate-200 group-hover:border-indigo-200 shadow-sm transition-all">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                </div>
+                Kembali ke Panduan
+            </button>
 
-                    <div class="space-y-4">
-                        <div>
-                            <label class="block text-sm font-medium text-slate-700 mb-1.5">Jabatan <span class="text-red-500">*</span></label>
-                            <input type="text" id="input-jabatan" class="w-full px-4 py-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition-all text-sm" placeholder="Contoh: KEPALA DINAS PENDIDIKAN" oninput="updateState()">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                
+                <!-- KOLOM KIRI: FORM KENDALI -->
+                <div class="lg:col-span-5 flex flex-col gap-6">
+                    
+                    <!-- Card Pengisian -->
+                    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 md:p-8">
+                        <div class="flex justify-between items-end mb-6">
+                            <div>
+                                <h2 class="text-xl font-bold text-slate-800">Data Penandatangan</h2>
+                                <p class="text-sm text-slate-500 mt-1">Masukkan data sesuai SK Jabatan.</p>
+                            </div>
+                            <button onclick="resetForm()" class="text-xs text-slate-400 hover:text-rose-500 font-medium transition-colors flex items-center gap-1">
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg> Bersihkan
+                            </button>
                         </div>
+
+                        <!-- Template Cepat (Fitur Baru) -->
+                        <div class="mb-6">
+                            <label class="block text-xs font-semibold tracking-wide text-slate-400 uppercase mb-3">Template Pengisian Cepat</label>
+                            <div class="flex flex-wrap gap-2">
+                                <button onclick="applyPreset('GUBERNUR JAWA BARAT', 'DR. H. MOCHAMAD RIDWAN KAMIL, S.T., M.U.D.', 'Pembina Utama')" class="text-xs bg-slate-100 hover:bg-indigo-50 text-slate-600 hover:text-primary px-3 py-1.5 rounded-md border border-slate-200 hover:border-indigo-200 transition-colors">Gubernur</button>
+                                <button onclick="applyPreset('KEPALA DINAS', 'H. AHMAD FULAN, S.Pd., M.Si.', 'Pembina Tingkat I')" class="text-xs bg-slate-100 hover:bg-indigo-50 text-slate-600 hover:text-primary px-3 py-1.5 rounded-md border border-slate-200 hover:border-indigo-200 transition-colors">Kepala Dinas</button>
+                                <button onclick="applyPreset('OPERATOR LAYANAN OPERASIONAL', 'HANJAR CATUR SAKSONO', '')" class="text-xs bg-slate-100 hover:bg-indigo-50 text-slate-600 hover:text-primary px-3 py-1.5 rounded-md border border-slate-200 hover:border-indigo-200 transition-colors">Operator</button>
+                            </div>
+                        </div>
+
+                        <!-- Form Utama -->
+                        <div class="space-y-5">
+                            <div>
+                                <label class="block text-sm font-medium text-slate-700 mb-1.5">Nama Jabatan <span class="text-rose-500">*</span></label>
+                                <input type="text" id="input-jabatan" class="w-full bg-slate-50 border border-slate-200 text-slate-900 text-sm rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary block p-3 transition-all" placeholder="Contoh: SEKRETARIS DAERAH" oninput="updatePreview()" autocomplete="off">
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-slate-700 mb-1.5">Nama Lengkap & Gelar <span class="text-rose-500">*</span></label>
+                                <input type="text" id="input-nama" class="w-full bg-slate-50 border border-slate-200 text-slate-900 text-sm rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary block p-3 transition-all" placeholder="Contoh: DR. H. AHMAD FULAN, M.Si." oninput="updatePreview()" autocomplete="off">
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-medium text-slate-700 mb-1.5">Pangkat / Golongan <span class="text-slate-400 font-normal text-xs ml-1">(Kosongkan jika Non-ASN)</span></label>
+                                <input type="text" id="input-pangkat" class="w-full bg-slate-50 border border-slate-200 text-slate-900 text-sm rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary block p-3 transition-all" placeholder="Contoh: Pembina Utama Muda" oninput="updatePreview()" autocomplete="off">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- KOLOM KANAN: KANVAS PREVIEW -->
+                <div class="lg:col-span-7 flex flex-col gap-6">
+                    
+                    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 flex flex-col h-full overflow-hidden">
                         
-                        <div>
-                            <label class="block text-sm font-medium text-slate-700 mb-1.5">Nama Lengkap <span class="text-red-500">*</span></label>
-                            <input type="text" id="input-nama" class="w-full px-4 py-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition-all text-sm" placeholder="Contoh: DR. H. AHMAD FULAN, M.Si." oninput="updateState()">
+                        <div class="border-b border-slate-100 p-4 px-6 flex justify-between items-center bg-slate-50/50">
+                            <h2 class="text-sm font-bold text-slate-700 flex items-center gap-2">
+                                <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                                Kanvas Pratinjau
+                            </h2>
+                            <span class="text-xs font-medium text-slate-400 bg-white px-2 py-1 rounded border border-slate-200 shadow-sm">Skala 1:1</span>
                         </div>
 
-                        <div>
-                            <label class="block text-sm font-medium text-slate-700 mb-1.5">Pangkat / Golongan (Opsional)</label>
-                            <input type="text" id="input-pangkat" class="w-full px-4 py-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition-all text-sm" placeholder="Contoh: Pembina Utama Muda, IV/c" oninput="updateState()">
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Customization Card -->
-                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
-                    <div class="flex items-center gap-2 mb-6">
-                        <i data-lucide="settings-2" class="w-5 h-5 text-primary-600"></i>
-                        <h2 class="text-lg font-semibold text-slate-900">Kustomisasi Tampilan</h2>
-                    </div>
-
-                    <div class="space-y-5">
-                        <!-- Template Selector -->
-                        <div>
-                            <label class="block text-sm font-medium text-slate-700 mb-2">Pilihan Template</label>
-                            <div class="grid grid-cols-3 gap-2">
-                                <button onclick="setTemplate('standar')" id="btn-standar" class="template-btn active ring-2 ring-primary-500 bg-primary-50 border-primary-500 text-primary-700 text-xs font-semibold py-2 px-3 rounded-lg border transition-all">Standar BSSN</button>
-                                <button onclick="setTemplate('minimalis')" id="btn-minimalis" class="template-btn bg-white border-slate-300 text-slate-600 hover:bg-slate-50 text-xs font-semibold py-2 px-3 rounded-lg border transition-all">Minimalis</button>
-                                <button onclick="setTemplate('modern')" id="btn-modern" class="template-btn bg-white border-slate-300 text-slate-600 hover:bg-slate-50 text-xs font-semibold py-2 px-3 rounded-lg border transition-all">Modern</button>
+                        <!-- Area Checkerboard -->
+                        <div class="bg-checker flex-1 min-h-[300px] flex items-center justify-center p-6 overflow-x-auto relative">
+                            
+                            <!-- KOTAK SPESIMEN (STRUKTUR HTML ASLI TIDAK DIUBAH) -->
+                            <div id="spesimen-preview" class="spesimen-box shadow-md hover:shadow-lg transition-shadow duration-300">
+                                <div class="logo-container">
+                                    <img src="logo.png" alt="Logo BSrE" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjY2JkNWUxIiBzdHJva2Utd2lkdGg9IjEiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iMTAiPjwvY2lyY2xlPjxsaW5lIHgxPSIxMiIgeTE9IjgiIHgyPSIxMiIgeTI9IjEyIj48L2xpbmU+PGxpbmUgeDE9IjEyIiB5MT0iMTYiIHgyPSIxMi4wMSIgeTI9IjE2Ij48L2xpbmU+PC9zdmc+'" title="Pastikan file logo.png ada di folder yang sama">
+                                </div>
+                                <div class="text-container">
+                                    <span style="text-transform: none;">Ditandatangani secara elektronik oleh:</span>
+                                    <strong id="preview-jabatan" class="uppercase-text font-bold" style="margin-top: 1px;"></strong>
+                                    <div class="spacer"></div>
+                                    <span id="preview-nama" class="uppercase-text"></span>
+                                    <span id="preview-pangkat"></span>
+                                </div>
                             </div>
+
                         </div>
 
-                        <!-- Logo Upload -->
-                        <div>
-                            <label class="block text-sm font-medium text-slate-700 mb-1.5">Logo Instansi</label>
-                            <div class="flex items-center gap-3">
-                                <label class="flex-1 cursor-pointer group">
-                                    <div class="flex items-center justify-center w-full px-4 py-2 border-2 border-dashed border-slate-300 rounded-lg group-hover:border-primary-500 group-hover:bg-primary-50 transition-all">
-                                        <div class="flex items-center gap-2 text-sm text-slate-600 group-hover:text-primary-600">
-                                            <i data-lucide="upload-cloud" class="w-4 h-4"></i>
-                                            <span id="logo-filename">Upload Logo (PNG/SVG)</span>
-                                        </div>
-                                    </div>
-                                    <input type="file" id="input-logo" class="hidden" accept="image/*" onchange="handleLogoUpload(this)">
-                                </label>
-                                <button onclick="resetLogo()" class="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors" title="Hapus Logo">
-                                    <i data-lucide="trash-2" class="w-5 h-5"></i>
+                        <!-- Aksi Bawah -->
+                        <div class="p-6 border-t border-slate-100 bg-white">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                
+                                <!-- Tombol Salin (Fitur Baru) -->
+                                <button onclick="copyImage()" class="flex items-center justify-center gap-2 w-full py-3 px-4 bg-white border-2 border-slate-200 hover:border-primary hover:bg-indigo-50 text-slate-700 hover:text-primary font-semibold rounded-lg transition-all focus:outline-none focus:ring-4 focus:ring-indigo-100">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path></svg>
+                                    Salin Gambar (Copy)
                                 </button>
-                            </div>
-                        </div>
+                                
+                                <!-- Tombol Unduh -->
+                                <button onclick="downloadImage()" class="flex items-center justify-center gap-2 w-full py-3 px-4 bg-primary hover:bg-primaryHover text-white font-semibold rounded-lg shadow-md shadow-indigo-200 transition-all transform hover:-translate-y-0.5 focus:outline-none focus:ring-4 focus:ring-indigo-200">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                                    Unduh High-Res (PNG)
+                                </button>
 
-                        <!-- Advanced Toggles -->
-                        <div class="grid grid-cols-2 gap-4 pt-2">
-                            <div>
-                                <label class="block text-sm font-medium text-slate-700 mb-1.5">Ukuran Font</label>
-                                <select id="input-fontsize" onchange="updateState()" class="w-full px-3 py-2 rounded-lg border border-slate-300 text-sm focus:ring-2 focus:ring-primary-500 outline-none">
-                                    <option value="10px">Kecil (10px)</option>
-                                    <option value="11px" selected>Standar (11px)</option>
-                                    <option value="12px">Besar (12px)</option>
-                                </select>
                             </div>
-                            <div>
-                                <label class="block text-sm font-medium text-slate-700 mb-1.5">Latar Belakang</label>
-                                <select id="input-bg" onchange="updateState()" class="w-full px-3 py-2 rounded-lg border border-slate-300 text-sm focus:ring-2 focus:ring-primary-500 outline-none">
-                                    <option value="#ffffff">Putih Solid</option>
-                                    <option value="transparent">Transparan (PNG)</option>
-                                </select>
-                            </div>
+                            <p class="text-center text-xs text-slate-400 mt-4">Transparansi otomatis terjaga (Tidak ada background putih di luar garis).</p>
                         </div>
                     </div>
-                </div>
 
-                <!-- History Card -->
-                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
-                    <div class="flex items-center justify-between mb-4">
-                        <div class="flex items-center gap-2">
-                            <i data-lucide="history" class="w-5 h-5 text-primary-600"></i>
-                            <h2 class="text-lg font-semibold text-slate-900">Riwayat</h2>
-                        </div>
-                        <button onclick="clearHistory()" class="text-xs text-red-500 hover:text-red-700 font-medium">Hapus Semua</button>
-                    </div>
-                    <div id="history-list" class="space-y-2 max-h-40 overflow-y-auto no-scrollbar">
-                        <p class="text-sm text-slate-400 text-center py-4">Belum ada riwayat generasi.</p>
-                    </div>
                 </div>
             </div>
-
-            <!-- RIGHT COLUMN: Preview & Actions -->
-            <div class="lg:col-span-7 space-y-6 animate-slide-up" style="animation-delay: 0.1s;">
-                
-                <!-- Preview Card -->
-                <div class="bg-white rounded-2xl shadow-lg border border-slate-200 p-8 flex flex-col items-center relative overflow-hidden">
-                    <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary-500 to-indigo-600"></div>
-                    
-                    <div class="flex items-center justify-between w-full mb-6">
-                        <h2 class="text-lg font-semibold text-slate-900 flex items-center gap-2">
-                            <i data-lucide="eye" class="w-5 h-5 text-primary-600"></i>
-                            Preview Real-time
-                        </h2>
-                        <span class="text-xs font-medium px-2.5 py-1 bg-green-100 text-green-700 rounded-full flex items-center gap-1">
-                            <span class="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></span>
-                            Aktif
-                        </span>
-                    </div>
-
-                    <!-- The Specimen Box (Target for html2canvas) -->
-                    <div class="p-8 bg-slate-100 rounded-xl w-full flex justify-center items-center min-h-[200px] border border-slate-200 border-dashed">
-                        <div id="spesimen-preview" class="spesimen-box relative">
-                            <!-- Content injected by JS -->
-                        </div>
-                    </div>
-
-                    <p class="text-xs text-slate-500 mt-4 text-center max-w-md">
-                        <i data-lucide="info" class="w-3 h-3 inline mr-1"></i>
-                        Preview di atas menunjukkan representasi akurat dari hasil unduhan. Pastikan data sudah sesuai sebelum mengunduh.
-                    </p>
-                </div>
-
-                <!-- Action Buttons -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <button onclick="downloadImage('png')" class="group relative flex items-center justify-center gap-3 bg-primary-600 hover:bg-primary-700 text-white font-semibold py-3.5 px-6 rounded-xl shadow-md hover:shadow-lg transition-all transform hover:-translate-y-0.5">
-                        <i data-lucide="download" class="w-5 h-5 group-hover:animate-bounce"></i>
-                        <div class="text-left">
-                            <div class="text-sm">Unduh Spesimen</div>
-                            <div class="text-[10px] text-primary-100 font-normal">Format PNG (High Res)</div>
-                        </div>
-                    </button>
-                    
-                    <button onclick="copyToClipboard()" class="group flex items-center justify-center gap-3 bg-white hover:bg-slate-50 text-slate-700 border border-slate-300 font-semibold py-3.5 px-6 rounded-xl shadow-sm hover:shadow-md transition-all">
-                        <i data-lucide="copy" class="w-5 h-5 text-slate-500 group-hover:text-primary-600"></i>
-                        <div class="text-left">
-                            <div class="text-sm">Salin ke Clipboard</div>
-                            <div class="text-[10px] text-slate-400 font-normal">Tempel langsung ke Word</div>
-                        </div>
-                    </button>
-                </div>
-
-                <!-- Disclaimer -->
-                <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 flex gap-3">
-                    <i data-lucide="alert-triangle" class="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5"></i>
-                    <div class="text-sm text-amber-800">
-                        <p class="font-semibold mb-1">Pernyataan Hukum</p>
-                        <p class="leading-relaxed">Spesimen ini hanyalah <strong>representasi visual</strong> untuk draf naskah dinas. Keabsahan hukum Tanda Tangan Elektronik (TTE) hanya berlaku setelah dokumen ditandatangani secara kriptografi menggunakan sertifikat elektronik dari BSrE BSSN. Dilarang memalsukan identitas pejabat.</p>
-                    </div>
-                </div>
-            </div>
+            
+            <footer class="mt-12 text-center text-sm text-slate-400 pb-8">
+                Generator Spesimen TTE &copy; 2024. UI/UX Revamped Version.
+            </footer>
         </div>
     </main>
 
-    <!-- Guide Modal -->
-    <div id="guide-modal" class="fixed inset-0 z-50 hidden" aria-labelledby="modal-title" role="dialog" aria-modal="true">
-        <div class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm transition-opacity opacity-0" id="guide-backdrop"></div>
-        <div class="fixed inset-0 z-10 overflow-y-auto">
-            <div class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
-                <div class="relative transform overflow-hidden rounded-2xl bg-white text-left shadow-2xl transition-all sm:my-8 sm:w-full sm:max-w-2xl opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95" id="guide-panel">
-                    <div class="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
-                        <div class="flex items-center justify-between mb-5">
-                            <h3 class="text-xl font-bold text-slate-900 flex items-center gap-2" id="modal-title">
-                                <i data-lucide="book-open" class="w-6 h-6 text-primary-600"></i>
-                                Panduan Penggunaan
-                            </h3>
-                            <button onclick="toggleGuide()" class="text-slate-400 hover:text-slate-600 transition-colors">
-                                <i data-lucide="x" class="w-6 h-6"></i>
-                            </button>
-                        </div>
-                        
-                        <div class="space-y-4 text-sm text-slate-600 leading-relaxed">
-                            <div class="bg-blue-50 p-4 rounded-lg border border-blue-100">
-                                <h4 class="font-semibold text-blue-900 mb-1">Maksud & Tujuan</h4>
-                                <p>Aplikasi ini menghasilkan representasi visual (kotak spesimen) TTE yang sesuai standar tata naskah dinas (Font Arial, spasi proporsional). Digunakan untuk disematkan pada draf Naskah Dinas <strong>sebelum</strong> ditandatangani secara kriptografi.</p>
-                            </div>
-                            
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                <div class="bg-green-50 p-4 rounded-lg border border-green-100">
-                                    <h4 class="font-semibold text-green-900 mb-2 flex items-center gap-2">
-                                        <i data-lucide="check-circle" class="w-4 h-4"></i> Diperbolehkan
-                                    </h4>
-                                    <ul class="list-disc pl-4 space-y-1 text-xs">
-                                        <li>Membuat spesimen sesuai jabatan sah.</li>
-                                        <li>Mengunduh & menempelkan ke draf resmi.</li>
-                                        <li>Menyesuaikan format pangkat (opsional).</li>
-                                    </ul>
-                                </div>
-                                <div class="bg-red-50 p-4 rounded-lg border border-red-100">
-                                    <h4 class="font-semibold text-red-900 mb-2 flex items-center gap-2">
-                                        <i data-lucide="x-circle" class="w-4 h-4"></i> Dilarang
-                                    </h4>
-                                    <ul class="list-disc pl-4 space-y-1 text-xs">
-                                        <li>Memalsukan identitas pejabat lain.</li>
-                                        <li>Menganggap gambar ini sebagai TTE sah (bukan sertifikat digital).</li>
-                                        <li>Penyalahgunaan di luar kepentingan dinas.</li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="bg-slate-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6 border-t border-slate-200">
-                        <button type="button" onclick="toggleGuide()" class="inline-flex w-full justify-center rounded-lg bg-primary-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-primary-500 sm:ml-3 sm:w-auto transition-colors">
-                            Saya Mengerti
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Toast Container -->
-    <div id="toast-container"></div>
+    <!-- Kontainer Toast -->
+    <div id="toast" class="toast"></div>
 
     <script>
-        // Initialize Lucide Icons
-        lucide.createIcons();
-
-        // State Management
-        const state = {
-            jabatan: '',
-            nama: '',
-            pangkat: '',
-            template: 'standar',
-            fontSize: '11px',
-            bgColor: '#ffffff',
-            logo: null, // base64 string
-            logoName: ''
-        };
-
-        // Default Logo (Inline SVG Base64 for reliability)
-        const defaultLogo = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='45' fill='%23e2e8f0'/%3E%3Cpath d='M50 25 L30 65 L70 65 Z' fill='%2394a3b8'/%3E%3C/svg%3E";
-
-        // Load from LocalStorage on init
-        window.onload = () => {
-            const saved = localStorage.getItem('tte_generator_state');
-            if (saved) {
-                const parsed = JSON.parse(saved);
-                Object.assign(state, parsed);
-                document.getElementById('input-jabatan').value = state.jabatan;
-                document.getElementById('input-nama').value = state.nama;
-                document.getElementById('input-pangkat').value = state.pangkat;
-                document.getElementById('input-fontsize').value = state.fontSize;
-                document.getElementById('input-bg').value = state.bgColor;
-                if (state.logoName) {
-                    document.getElementById('logo-filename').textContent = state.logoName;
+        // Logika Navigasi Halaman
+        function switchView(view) {
+            const guide = document.getElementById('view-guide');
+            const workspace = document.getElementById('view-workspace');
+            
+            if (view === 'workspace') {
+                guide.classList.replace('active-view', 'hidden-view');
+                setTimeout(() => workspace.classList.replace('hidden-view', 'active-view'), 300);
+                
+                // Set preset kosong pertama kali jika belum ada isi
+                if(!document.getElementById('input-jabatan').value) {
+                    updatePreview(); 
                 }
+            } else {
+                workspace.classList.replace('active-view', 'hidden-view');
+                setTimeout(() => guide.classList.replace('hidden-view', 'active-view'), 300);
             }
-            updateTemplateButtons();
+        }
+
+        // Fitur: Template Pengisian Cepat
+        function applyPreset(jabatan, nama, pangkat) {
+            document.getElementById('input-jabatan').value = jabatan;
+            document.getElementById('input-nama').value = nama;
+            document.getElementById('input-pangkat').value = pangkat;
             updatePreview();
-            renderHistory();
+            showToast("Template berhasil dimuat", "success");
+        }
+
+        // Fitur: Bersihkan Form
+        function resetForm() {
+            document.getElementById('input-jabatan').value = '';
+            document.getElementById('input-nama').value = '';
+            document.getElementById('input-pangkat').value = '';
+            updatePreview();
+        }
+
+        // Logika Update Preview Inti
+        function updatePreview() {
+            const inputJabatan = document.getElementById('input-jabatan').value;
+            const inputNama = document.getElementById('input-nama').value;
+            const inputPangkat = document.getElementById('input-pangkat').value;
+
+            // Jika kosong, tampilkan placeholder transparan agar kotak tidak menciut
+            const valJabatan = inputJabatan.trim() === "" ? "NAMA JABATAN" : inputJabatan;
+            const valNama = inputNama.trim() === "" ? "NAMA LENGKAP PEJABAT" : inputNama;
+
+            document.getElementById('preview-jabatan').innerText = valJabatan + (inputJabatan.trim() === "" ? "" : ",");
+            document.getElementById('preview-nama').innerText = valNama;
+            
+            const pangkatEl = document.getElementById('preview-pangkat');
+            if (inputPangkat.trim() === "") {
+                pangkatEl.innerHTML = "&nbsp;"; 
+                pangkatEl.style.display = 'block';
+            } else {
+                pangkatEl.innerText = inputPangkat;
+                pangkatEl.style.display = 'block';
+            }
+        }
+
+        // Konfigurasi Standar html2canvas
+        const canvasOptions = { 
+            scale: 4, 
+            backgroundColor: null // Memastikan luar kotak transparan!
         };
 
-        function updateState() {
-            state.jabatan = document.getElementById('input-jabatan').value;
-            state.nama = document.getElementById('input-nama').value;
-            state.pangkat = document.getElementById('input-pangkat').value;
-            state.fontSize = document.getElementById('input-fontsize').value;
-            state.bgColor = document.getElementById('input-bg').value;
-            
-            saveState();
-            updatePreview();
-        }
+        // Fitur: Unduh Gambar
+        function downloadImage() {
+            let valJabatan = document.getElementById('input-jabatan').value.trim() || "jabatan";
+            let valNama = document.getElementById('input-nama').value.trim() || "nama";
 
-        function saveState() {
-            localStorage.setItem('tte_generator_state', JSON.stringify(state));
-        }
+            valJabatan = valJabatan.replace(/\s+/g, '_');
+            valNama = valNama.replace(/\s+/g, '_');
+            const namaFile = `spesimen_${valNama}_${valJabatan}.png`;
 
-        function setTemplate(template) {
-            state.template = template;
-            updateTemplateButtons();
-            updatePreview();
-        }
-
-        function updateTemplateButtons() {
-            document.querySelectorAll('.template-btn').forEach(btn => {
-                btn.classList.remove('ring-2', 'ring-primary-500', 'bg-primary-50', 'border-primary-500', 'text-primary-700');
-                btn.classList.add('bg-white', 'border-slate-300', 'text-slate-600');
-            });
-            const activeBtn = document.getElementById(`btn-${state.template}`);
-            activeBtn.classList.remove('bg-white', 'border-slate-300', 'text-slate-600');
-            activeBtn.classList.add('ring-2', 'ring-primary-500', 'bg-primary-50', 'border-primary-500', 'text-primary-700');
-        }
-
-        function handleLogoUpload(input) {
-            if (input.files && input.files[0]) {
-                const file = input.files[0];
-                state.logoName = file.name;
-                document.getElementById('logo-filename').textContent = file.name;
-                
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    state.logo = e.target.result;
-                    saveState();
-                    updatePreview();
-                    showToast('Logo berhasil dimuat', 'success');
-                };
-                reader.readAsDataURL(file);
-            }
-        }
-
-        function resetLogo() {
-            state.logo = null;
-            state.logoName = '';
-            document.getElementById('input-logo').value = '';
-            document.getElementById('logo-filename').textContent = 'Upload Logo (PNG/SVG)';
-            saveState();
-            updatePreview();
-            showToast('Logo dihapus', 'info');
-        }
-
-        function updatePreview() {
-            const previewEl = document.getElementById('spesimen-preview');
-            const jabatan = state.jabatan.trim() || 'NAMA JABATAN';
-            const nama = state.nama.trim() || 'NAMA LENGKAP PEJABAT';
-            const pangkat = state.pangkat.trim();
-            
-            const logoSrc = state.logo || defaultLogo;
-            const fontSize = state.fontSize;
-            const bgColor = state.bgColor;
-
-            let html = '';
-
-            if (state.template === 'standar') {
-                html = `
-                    <div style="font-family: Arial, Helvetica, sans-serif; font-size: ${fontSize}; line-height: 1.3; border: 2px solid #000000; border-radius: 8px; padding: 12px 16px; width: 365px; background-color: ${bgColor}; display: flex; align-items: center; box-sizing: border-box; color: #000000;">
-                        <div style="height: 70px; width: 70px; margin-right: 16px; flex-shrink: 0; display: flex; justify-content: center; align-items: center;">
-                            <img src="${logoSrc}" style="width: 100%; height: 100%; object-fit: contain;" alt="Logo">
-                        </div>
-                        <div style="display: flex; flex-direction: column; justify-content: center; text-align: left; width: 100%;">
-                            <span style="text-transform: none; display: block; margin-bottom: 2px;">Ditandatangani secara elektronik oleh:</span>
-                            <strong style="text-transform: uppercase; font-weight: bold; margin-bottom: 12px; display: block;">${jabatan},</strong>
-                            <span style="text-transform: uppercase; display: block; font-weight: 600;">${nama}</span>
-                            ${pangkat ? `<span style="display: block; margin-top: 2px;">${pangkat}</span>` : '<span style="display: block; margin-top: 2px; color: transparent;">.</span>'}
-                        </div>
-                    </div>
-                `;
-            } else if (state.template === 'minimalis') {
-                html = `
-                    <div style="font-family: Arial, Helvetica, sans-serif; font-size: ${fontSize}; line-height: 1.4; border: 1px solid #000000; padding: 16px 20px; width: 365px; background-color: ${bgColor}; text-align: center; box-sizing: border-box; color: #000000;">
-                        <div style="margin-bottom: 8px; font-weight: bold; text-transform: uppercase;">${jabatan}</div>
-                        <div style="height: 1px; background: #000; width: 40px; margin: 8px auto;"></div>
-                        <div style="font-weight: bold; text-transform: uppercase; margin-top: 8px;">${nama}</div>
-                        ${pangkat ? `<div style="margin-top: 4px;">${pangkat}</div>` : ''}
-                    </div>
-                `;
-            } else if (state.template === 'modern') {
-                html = `
-                    <div style="font-family: Arial, Helvetica, sans-serif; font-size: ${fontSize}; line-height: 1.3; border: 1px solid #e2e8f0; border-left: 4px solid #2563eb; border-radius: 6px; padding: 16px; width: 365px; background-color: ${bgColor}; display: flex; align-items: center; box-sizing: border-box; color: #1e293b;">
-                        <div style="height: 60px; width: 60px; margin-right: 16px; flex-shrink: 0; display: flex; justify-content: center; align-items: center; background: #f8fafc; border-radius: 50%; padding: 4px;">
-                            <img src="${logoSrc}" style="width: 100%; height: 100%; object-fit: contain;" alt="Logo">
-                        </div>
-                        <div style="display: flex; flex-direction: column; justify-content: center; text-align: left; width: 100%;">
-                            <span style="font-size: 0.9em; color: #64748b; margin-bottom: 4px;">Ditandatangani secara elektronik oleh:</span>
-                            <strong style="text-transform: uppercase; font-weight: bold; color: #0f172a;">${jabatan}</strong>
-                            <span style="text-transform: uppercase; font-weight: 600; color: #0f172a; margin-top: 4px;">${nama}</span>
-                            ${pangkat ? `<span style="color: #475569; margin-top: 2px;">${pangkat}</span>` : ''}
-                        </div>
-                    </div>
-                `;
-            }
-
-            previewEl.innerHTML = html;
-        }
-
-        async function downloadImage(format = 'png') {
             const element = document.getElementById('spesimen-preview');
-            const namaFile = `spesimen_tte_${state.nama.replace(/\s+/g, '_') || 'dokumen'}.${format}`;
-
-            showToast('Memproses unduhan...', 'info');
-
-            try {
-                const canvas = await html2canvas(element, { 
-                    scale: 4, 
-                    backgroundColor: state.bgColor === 'transparent' ? null : state.bgColor,
-                    useCORS: true,
-                    allowTaint: true
-                });
-                
+            html2canvas(element, canvasOptions).then(canvas => {
                 const link = document.createElement('a');
                 link.download = namaFile;
-                link.href = canvas.toDataURL(`image/${format === 'png' ? 'png' : 'jpeg'}`);
+                link.href = canvas.toDataURL('image/png');
                 link.click();
-                
-                addToHistory(namaFile);
-                showToast('Spesimen berhasil diunduh!', 'success');
-            } catch (err) {
-                console.error(err);
-                showToast('Gagal mengunduh. Coba lagi.', 'error');
-            }
+                showToast("Gambar berhasil diunduh!", "success");
+            });
         }
 
-        async function copyToClipboard() {
+        // Fitur Baru: Salin Gambar Langsung (Clipboard)
+        function copyImage() {
             const element = document.getElementById('spesimen-preview');
-            showToast('Menyalin ke clipboard...', 'info');
-
-            try {
-                const canvas = await html2canvas(element, { 
-                    scale: 4, 
-                    backgroundColor: state.bgColor === 'transparent' ? null : state.bgColor,
-                    useCORS: true
-                });
-                
-                canvas.toBlob(async (blob) => {
+            
+            html2canvas(element, canvasOptions).then(canvas => {
+                canvas.toBlob(blob => {
                     try {
-                        await navigator.clipboard.write([
-                            new ClipboardItem({ 'image/png': blob })
-                        ]);
-                        showToast('Berhasil disalin! Tempel (Ctrl+V) di Word.', 'success');
-                        addToHistory('Disalin ke Clipboard');
+                        const item = new ClipboardItem({ 'image/png': blob });
+                        navigator.clipboard.write([item]).then(() => {
+                            showToast("Gambar berhasil disalin! Silakan Paste (CTRL+V) di dokumen Anda.", "success");
+                        }).catch(err => {
+                            console.error("Gagal menyalin:", err);
+                            showToast("Browser Anda tidak mendukung salin gambar. Silakan gunakan tombol unduh.", "error");
+                        });
                     } catch (err) {
-                        showToast('Gagal menyalin. Browser mungkin tidak mendukung.', 'error');
+                        showToast("Gagal menyalin. Silakan gunakan tombol unduh.", "error");
                     }
                 });
-            } catch (err) {
-                showToast('Terjadi kesalahan saat menyalin.', 'error');
-            }
-        }
-
-        // History Management
-        function addToHistory(action) {
-            let history = JSON.parse(localStorage.getItem('tte_history') || '[]');
-            const timestamp = new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
-            const name = state.nama || 'Tanpa Nama';
-            
-            history.unshift({ action, name, time: timestamp });
-            if (history.length > 3) history.pop(); // Keep only last 3
-            
-            localStorage.setItem('tte_history', JSON.stringify(history));
-            renderHistory();
-        }
-
-        function renderHistory() {
-            const history = JSON.parse(localStorage.getItem('tte_history') || '[]');
-            const container = document.getElementById('history-list');
-            
-            if (history.length === 0) {
-                container.innerHTML = '<p class="text-sm text-slate-400 text-center py-4">Belum ada riwayat generasi.</p>';
-                return;
-            }
-
-            container.innerHTML = history.map(item => `
-                <div class="flex items-center justify-between p-3 bg-slate-50 rounded-lg border border-slate-100 text-sm">
-                    <div class="flex items-center gap-3">
-                        <div class="bg-primary-100 text-primary-600 p-1.5 rounded-md">
-                            <i data-lucide="file-check" class="w-4 h-4"></i>
-                        </div>
-                        <div>
-                            <div class="font-medium text-slate-800 truncate max-w-[150px]">${item.name}</div>
-                            <div class="text-xs text-slate-500">${item.action}</div>
-                        </div>
-                    </div>
-                    <span class="text-xs text-slate-400 font-mono">${item.time}</span>
-                </div>
-            `).join('');
-            lucide.createIcons();
-        }
-
-        function clearHistory() {
-            localStorage.removeItem('tte_history');
-            renderHistory();
-            showToast('Riwayat dihapus', 'info');
-        }
-
-        // Modal Logic
-        function toggleGuide() {
-            const modal = document.getElementById('guide-modal');
-            const backdrop = document.getElementById('guide-backdrop');
-            const panel = document.getElementById('guide-panel');
-            
-            if (modal.classList.contains('hidden')) {
-                modal.classList.remove('hidden');
-                // Trigger reflow
-                void modal.offsetWidth;
-                backdrop.classList.remove('opacity-0');
-                panel.classList.remove('opacity-0', 'translate-y-4', 'sm:translate-y-0', 'sm:scale-95');
-                panel.classList.add('opacity-100', 'translate-y-0', 'sm:scale-100');
-            } else {
-                backdrop.classList.add('opacity-0');
-                panel.classList.remove('opacity-100', 'translate-y-0', 'sm:scale-100');
-                panel.classList.add('opacity-0', 'translate-y-4', 'sm:translate-y-0', 'sm:scale-95');
-                setTimeout(() => {
-                    modal.classList.add('hidden');
-                }, 300);
-            }
-        }
-
-        // Toast Notification System
-        function showToast(message, type = 'info') {
-            const container = document.getElementById('toast-container');
-            const toast = document.createElement('div');
-            
-            const colors = {
-                success: 'bg-green-600',
-                error: 'bg-red-600',
-                info: 'bg-slate-800'
-            };
-            
-            const icons = {
-                success: 'check-circle',
-                error: 'x-circle',
-                info: 'info'
-            };
-
-            toast.className = `toast flex items-center gap-3 ${colors[type]} text-white px-4 py-3 rounded-lg shadow-lg min-w-[300px]`;
-            toast.innerHTML = `
-                <i data-lucide="${icons[type]}" class="w-5 h-5 flex-shrink-0"></i>
-                <span class="text-sm font-medium">${message}</span>
-            `;
-            
-            container.appendChild(toast);
-            lucide.createIcons();
-            
-            // Animate in
-            requestAnimationFrame(() => {
-                toast.classList.add('show');
             });
-
-            // Remove after 3s
-            setTimeout(() => {
-                toast.classList.remove('show');
-                setTimeout(() => {
-                    toast.remove();
-                }, 300);
-            }, 3000);
         }
 
-        // Close modal on backdrop click
-        document.getElementById('guide-modal').addEventListener('click', function(e) {
-            if (e.target === this || e.target.id === 'guide-backdrop') {
-                toggleGuide();
-            }
-        });
+        // Fitur Baru: Toast Notification System
+        let toastTimeout;
+        function showToast(message, type) {
+            const toast = document.getElementById('toast');
+            toast.innerText = message;
+            toast.className = `toast show ${type}`;
+            
+            clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => {
+                toast.classList.remove('show');
+            }, 4000);
+        }
+
+        // Inisialisasi awal UI
+        updatePreview();
     </script>
 </body>
 </html>
