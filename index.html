@@ -13,42 +13,47 @@
             font-size: 11px; 
             line-height: 1.15; 
             border: 1px solid #000000; 
-            border-radius: 10px; 
-            padding: 12px 18px 12px 14px; 
-            width: 375px; 
+            border-radius: 8px; 
+            /* PADDING SANGAT DITIPISKAN (Atas 8px, Kanan 12px, Bawah 8px, Kiri 10px) */
+            padding: 8px 12px 8px 10px; 
+            width: 360px; /* Lebar box dipaskan */
             background-color: #ffffff;
             display: flex;
-            align-items: center;
+            align-items: center; /* Membuat logo dan teks sejajar di tengah secara vertikal */
             box-sizing: border-box;
             color: #000000;
         }
 
         .logo-container {
-            height: 80px; /* Ukuran dipaskan dengan proporsi teks */
-            width: 80px; 
-            margin-right: 14px; 
+            height: 65px; 
+            width: 65px; 
+            margin-right: 12px; 
             flex-shrink: 0;
+            overflow: hidden; /* Memotong whitespace yang di-zoom agar tidak bocor */
             display: flex;
             justify-content: center;
             align-items: center;
         }
 
         .logo-container img {
-            height: 100%; 
             width: 100%;
-            object-fit: contain; /* Menampilkan logo bersih Anda 100% utuh */
+            height: 100%;
+            object-fit: contain;
+            /* TRIK PENTING: Men-zoom gambar 40% agar whitespace bawaan gambar terbuang, 
+               sehingga logo intinya membesar dan memenuhi wadah */
+            transform: scale(1.4); 
         }
 
         .text-container {
             display: flex;
             flex-direction: column;
-            justify-content: center;
+            justify-content: flex-start; /* Menarik teks lebih ke atas */
             text-align: left;
             width: 100%;
         }
 
         .spacer {
-            height: 34px; 
+            height: 38px; /* JARAK TANDA TANGAN DIKEMBALIKAN MENJADI LEGA */
         }
 
         .uppercase-text {
@@ -97,7 +102,7 @@
                 </div>
             </div>
 
-            <button onclick="downloadImage()" class="mt-4 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded w-full max-w-[375px] transition-colors">
+            <button onclick="downloadImage()" class="mt-4 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded w-full max-w-[360px] transition-colors">
                 Unduh Spesimen (PNG)
             </button>
         </div>
