@@ -4,42 +4,54 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Generator Spesimen TTE</title>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- html2canvas -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     
     <style>
-        /* Ketentuan Font: Arial, Ukuran 8pt (sekitar 10.5px - 11px), Spasi 1 */
+        /* Ketentuan Font: Arial, 8pt (Setara ~11px), Spasi 1 atau 1.5 */
         .spesimen-box {
             font-family: Arial, Helvetica, sans-serif;
-            font-size: 8pt; 
-            line-height: 1.25; 
-            border: 1.5px solid #000000; /* Garis lebih jelas */
-            border-radius: 10px; /* Lengkungan sudut disesuaikan */
-            padding: 12px 16px; 
+            font-size: 11px; /* Ukuran setara 8pt */
+            line-height: 1.4; 
+            border: 1px solid #000000;
+            border-radius: 12px; /* Lengkungan persis dokumen asli */
+            padding: 16px 24px 16px 20px; /* Jarak dalam kotak */
+            width: 420px; /* Diperlebar agar teks muat 1 baris */
+            background-color: #ffffff;
             display: flex;
             align-items: center;
-            width: 330px; /* Lebar diperkecil agar tidak terlalu memanjang */
-            background-color: #ffffff;
             box-sizing: border-box;
             color: #000000;
         }
 
         .logo-container {
-            width: 65px; /* LOGO DIPERBESAR */
-            height: 65px;
-            margin-right: 16px;
+            width: 75px; /* Logo diperbesar */
+            height: 75px;
+            margin-right: 20px; /* Jarak antara logo dan teks */
+            position: relative;
             flex-shrink: 0;
-            overflow: hidden;
             display: flex;
             justify-content: center;
             align-items: center;
+            background-color: #ffffff;
         }
 
         .logo-container img {
-            width: 115%; 
-            height: 115%;
-            object-fit: cover;
-            clip-path: inset(5% 5% 5% 5%); 
+            width: 100%;
+            height: 100%;
+            object-fit: contain; /* Memastikan seluruh bagian logo masuk tanpa terpotong */
+        }
+
+        /* Trik khusus: Menutupi border hitam dari gambar asal menggunakan bingkai putih,
+           sehingga logo tidak perlu di-crop/terpotong sama sekali. */
+        .logo-container::after {
+            content: "";
+            position: absolute;
+            top: -1px; left: -1px; right: -1px; bottom: -1px;
+            border: 6px solid #ffffff;
+            pointer-events: none;
         }
 
         .text-container {
@@ -51,7 +63,7 @@
         }
 
         .spacer {
-            height: 45px; /* JARAK NAMA DAN JABATAN DIPERLEBAR */
+            height: 32px; /* Ruang kosong untuk tanda tangan visual (proporsional) */
         }
 
         .uppercase-text {
@@ -59,9 +71,9 @@
         }
     </style>
 </head>
-<body class="bg-gray-100 min-h-screen flex items-center justify-center p-5">
+<body class="bg-gray-100 min-h-screen flex items-center justify-center p-4">
 
-    <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-4xl flex flex-col md:flex-row gap-8">
+    <div class="bg-white p-6 md:p-8 rounded-lg shadow-lg w-full max-w-4xl flex flex-col md:flex-row gap-8">
         
         <!-- Bagian Form Input -->
         <div class="w-full md:w-1/2">
@@ -69,39 +81,42 @@
             
             <div class="mb-4">
                 <label class="block text-sm font-medium text-gray-700">Jabatan</label>
-                <input type="text" id="input-jabatan" class="mt-1 p-2 w-full border rounded" oninput="updatePreview()" value="OPERATOR LAYANAN OPERASIONAL">
+                <input type="text" id="input-jabatan" class="mt-1 p-2 w-full border rounded outline-blue-500" oninput="updatePreview()" value="OPERATOR LAYANAN OPERASIONAL">
             </div>
             
             <div class="mb-4">
                 <label class="block text-sm font-medium text-gray-700">Nama Lengkap</label>
-                <input type="text" id="input-nama" class="mt-1 p-2 w-full border rounded" oninput="updatePreview()" value="HANJAR CATUR SAKSONO">
+                <input type="text" id="input-nama" class="mt-1 p-2 w-full border rounded outline-blue-500" oninput="updatePreview()" value="HANJAR CATUR SAKSONO">
             </div>
 
             <div class="mb-4">
-                <label class="block text-sm font-medium text-gray-700">Pangkat (Hapus isinya jika tidak ada)</label>
-                <input type="text" id="input-pangkat" class="mt-1 p-2 w-full border rounded" oninput="updatePreview()" value="Pangkat">
+                <label class="block text-sm font-medium text-gray-700">Pangkat (Hapus jika tidak perlu)</label>
+                <!-- Kosong secara default agar tidak muncul tulisan "Pangkat" jika tidak diisi -->
+                <input type="text" id="input-pangkat" class="mt-1 p-2 w-full border rounded outline-blue-500" oninput="updatePreview()" value="">
             </div>
         </div>
 
         <!-- Bagian Preview -->
-        <div class="w-full md:w-1/2 flex flex-col items-center justify-center border-l-2 md:pl-8">
-            <h2 class="text-xl font-bold mb-5 text-gray-800">Preview Spesimen</h2>
+        <div class="w-full md:w-1/2 flex flex-col items-center justify-center border-t-2 md:border-t-0 md:border-l-2 pt-6 md:pt-0 md:pl-8">
+            <h2 class="text-xl font-bold mb-5 text-gray-800 text-center w-full">Preview Spesimen</h2>
             
-            <!-- Kotak Spesimen -->
-            <div id="spesimen-preview" class="spesimen-box shadow-sm">
-                <div class="logo-container">
-                    <img src="logo.png" alt="Logo BSrE">
-                </div>
-                <div class="text-container">
-                    <span style="text-transform: none;">Ditandatangani secara elektronik oleh:</span>
-                    <strong id="preview-jabatan" class="uppercase-text font-bold" style="margin-top: 1px;"></strong>
-                    <div class="spacer"></div>
-                    <span id="preview-nama" class="uppercase-text"></span>
-                    <span id="preview-pangkat"></span>
+            <!-- Area yang akan diunduh -->
+            <div class="overflow-x-auto w-full flex justify-center pb-4">
+                <div id="spesimen-preview" class="spesimen-box shadow-sm">
+                    <div class="logo-container">
+                        <img src="logo.png" alt="Logo BSrE">
+                    </div>
+                    <div class="text-container">
+                        <span style="text-transform: none;">Ditandatangani secara elektronik oleh:</span>
+                        <strong id="preview-jabatan" class="uppercase-text font-bold"></strong>
+                        <div class="spacer"></div>
+                        <span id="preview-nama" class="uppercase-text"></span>
+                        <span id="preview-pangkat"></span>
+                    </div>
                 </div>
             </div>
 
-            <button onclick="downloadImage()" class="mt-8 bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full max-w-[330px]">
+            <button onclick="downloadImage()" class="mt-4 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded w-full max-w-[420px] transition-colors">
                 Unduh Spesimen (PNG)
             </button>
         </div>
@@ -113,18 +128,14 @@
             const valNama = document.getElementById('input-nama').value;
             const valPangkat = document.getElementById('input-pangkat').value;
 
-            // Update Jabatan
+            // Jabatan dengan koma
             const jabatanEl = document.getElementById('preview-jabatan');
-            if (valJabatan.trim() === "") {
-                jabatanEl.innerText = "";
-            } else {
-                jabatanEl.innerText = valJabatan + ",";
-            }
+            jabatanEl.innerText = valJabatan.trim() === "" ? "" : valJabatan + ",";
 
-            // Update Nama
+            // Nama
             document.getElementById('preview-nama').innerText = valNama;
             
-            // Update Pangkat
+            // Pangkat (Sembunyikan baris jika kosong)
             const pangkatEl = document.getElementById('preview-pangkat');
             if (valPangkat.trim() === "") {
                 pangkatEl.style.display = 'none';
@@ -138,8 +149,8 @@
         function downloadImage() {
             const element = document.getElementById('spesimen-preview');
             html2canvas(element, { 
-                scale: 4, 
-                backgroundColor: "#ffffff"
+                scale: 4, // 4x lipat resolusi agar tajam untuk dicetak
+                backgroundColor: "#ffffff" // Background paksa putih
             }).then(canvas => {
                 const link = document.createElement('a');
                 link.download = 'spesimen-tte.png';
@@ -148,6 +159,7 @@
             });
         }
 
+        // Inisialisasi tampilan pertama kali
         updatePreview();
     </script>
 </body>
