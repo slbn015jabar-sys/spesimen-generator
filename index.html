@@ -12,9 +12,10 @@
             font-family: Arial, Helvetica, sans-serif;
             font-size: 11px; 
             line-height: 1.2; 
-            border: 1px solid #000000; 
+            /* BORDER DIPERTEBAL MENJADI 2px */
+            border: 2px solid #000000; 
             border-radius: 8px; 
-            padding: 12px 16px; /* Padding dikembalikan ke ukuran normal yang rapi */
+            padding: 12px 16px; 
             width: 365px; 
             background-color: #ffffff;
             display: flex;
@@ -31,15 +32,12 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            /* OVERFLOW HIDDEN DIHAPUS agar ujung logo sama sekali tidak terpotong */
         }
 
         .logo-container img {
             width: 100%;
             height: 100%;
             object-fit: contain;
-            /* Memperbesar logo untuk mengisi whitespace transparan bawaan gambar.
-               Karena tidak ada overflow: hidden, logo akan membesar 100% utuh dengan aman */
             transform: scale(1.25); 
         }
 
@@ -52,7 +50,7 @@
         }
 
         .spacer {
-            height: 28px; /* Jarak tanda tangan yang pas */
+            height: 28px; 
         }
 
         .uppercase-text {
@@ -119,7 +117,6 @@
             document.getElementById('preview-nama').innerText = valNama;
             
             const pangkatEl = document.getElementById('preview-pangkat');
-            // Logika baru: Jika kosong, berikan spasi kosong (&nbsp;) agar tinggi baris tetap terjaga sebagai jarak!
             if (valPangkat.trim() === "") {
                 pangkatEl.innerHTML = "&nbsp;"; 
                 pangkatEl.style.display = 'block';
