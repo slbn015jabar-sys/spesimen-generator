@@ -1,1 +1,146 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generator Spesimen TTE</title>
+    <!-- Tailwind CSS untuk styling tampilan web -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- html2canvas untuk fitur unduh menjadi gambar -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    
+    <style>
+        /* Ketentuan Font: Arial, Ukuran 8pt (kurang lebih 11px), Spasi 1 atau 1.5 */
+        .spesimen-box {
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 8pt; 
+            line-height: 1.2;
+            border: 1px solid #000;
+            border-radius: 8px;
+            padding: 10px 15px;
+            display: flex;
+            align-items: center;
+            width: 320px;
+            background-color: #ffffff;
+            box-sizing: border-box;
+        }
 
+        .logo-container {
+            width: 45px;
+            height: 45px;
+            margin-right: 15px;
+            flex-shrink: 0;
+            overflow: hidden; /* Membantu menyembunyikan elemen berlebih */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Meng-crop border hitam dari gambar 2 menggunakan clip-path */
+        .logo-container img {
+            width: 110%; 
+            height: 110%;
+            object-fit: cover;
+            /* Memotong 5% dari setiap sisi (Atas, Kanan, Bawah, Kiri) untuk menghilangkan hitam */
+            clip-path: inset(6% 6% 6% 6%); 
+        }
+
+        .text-container {
+            display: flex;
+            flex-direction: column;
+            text-align: left;
+            text-transform: uppercase; /* Format TTE umumnya huruf kapital */
+        }
+
+        .spacer {
+            height: 15px; /* Jarak untuk tanda tangan visual jika diperlukan */
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center p-5">
+
+    <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-4xl flex flex-col md:flex-row gap-8">
+        
+        <!-- Bagian Form Input -->
+        <div class="w-full md:w-1/2">
+            <h2 class="text-2xl font-bold mb-5 text-gray-800">Form Spesimen TTE</h2>
+            
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-700">Jabatan</label>
+                <input type="text" id="input-jabatan" class="mt-1 p-2 w-full border rounded" placeholder="Contoh: GUBERNUR JAWA BARAT" oninput="updatePreview()">
+            </div>
+            
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-700">Nama & Gelar</label>
+                <input type="text" id="input-nama" class="mt-1 p-2 w-full border rounded" placeholder="Contoh: DR. H. MOCHAMAD RIDWAN KAMIL, S.T., M.U.D." oninput="updatePreview()">
+            </div>
+
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-700">Pangkat (Opsional)</label>
+                <input type="text" id="input-pangkat" class="mt-1 p-2 w-full border rounded" placeholder="Contoh: Pembina Utama" oninput="updatePreview()">
+            </div>
+        </div>
+
+        <!-- Bagian Preview -->
+        <div class="w-full md:w-1/2 flex flex-col items-center justify-center border-l-2 pl-8">
+            <h2 class="text-xl font-bold mb-5 text-gray-800">Preview Spesimen</h2>
+            
+            <!-- Kotak Spesimen yang akan di-generate -->
+            <div id="spesimen-preview" class="spesimen-box shadow-sm">
+                <div class="logo-container">
+                    <!-- Pastikan file logo Anda bernama logo.png dan berada di folder yang sama -->
+                    <img src="logo.png" alt="Logo BSrE">
+                </div>
+                <div class="text-container">
+                    <span style="text-transform: none;">Ditandatangani secara elektronik oleh:</span>
+                    <strong id="preview-jabatan" class="font-bold">GUBERNUR JAWA BARAT,</strong>
+                    <div class="spacer"></div>
+                    <span id="preview-nama">NAMA</span>
+                    <span id="preview-pangkat" style="text-transform: capitalize;">Pangkat</span>
+                </div>
+            </div>
+
+            <button onclick="downloadImage()" class="mt-8 bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full">
+                Unduh Spesimen (PNG)
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Fungsi untuk mengupdate teks di preview secara real-time
+        function updatePreview() {
+            const jabatan = document.getElementById('input-jabatan').value || "JABATAN";
+            const nama = document.getElementById('input-nama').value || "NAMA DAN GELAR";
+            const pangkat = document.getElementById('input-pangkat').value || "Pangkat";
+
+            document.getElementById('preview-jabatan').innerText = jabatan + ",";
+            document.getElementById('preview-nama').innerText = nama;
+            
+            const pangkatEl = document.getElementById('preview-pangkat');
+            if (pangkat.trim() === "") {
+                pangkatEl.style.display = 'none';
+            } else {
+                pangkatEl.style.display = 'block';
+                pangkatEl.innerText = pangkat;
+            }
+        }
+
+        // Fungsi untuk mengunduh div menjadi gambar PNG
+        function downloadImage() {
+            const element = document.getElementById('spesimen-preview');
+            html2canvas(element, { 
+                scale: 3, // Skala diperbesar agar hasil PNG tidak pecah (High-Res)
+                backgroundColor: null 
+            }).then(canvas => {
+                const link = document.createElement('a');
+                link.download = 'spesimen-tte.png';
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+            });
+        }
+
+        // Inisialisasi awal
+        updatePreview();
+    </script>
+</body>
+</html>
